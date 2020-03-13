@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5e7aa549-afbb-4faf-af29-d43fa23f0972" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="eb4fddf1-796a-4c3a-a406-4e7d4ede4621" >
+		<http:request-connection host="indigo-airlines.us-e2.cloudhub.io" port="80" connectionIdleTimeout="90000" />
+	</http:request-config>
+	<flow name="indigoflightsFlow" doc:id="13240ed4-940a-43cd-aaed-aaf4a4b29011" >
+		<http:listener doc:name="Listener" doc:id="e1c9bc44-c15c-42b2-ba5f-54b567316c63" config-ref="HTTP_Listener_config" path="/indigoFlights"/>
+		<logger level="INFO" doc:name="Logger" doc:id="b0a12985-2fc5-4394-817c-fe1ee57ef32e" message="Method is ........................#[attributes.method]"/>
+		<set-variable value="#[attributes.method]" doc:name="Set Variable" doc:id="1702d0dc-1efa-4eb4-8c21-e2c12221c0bc" variableName="method"/>
+		<http:request method="GET" doc:name="Request" doc:id="18ff59e1-eef4-42d7-b8dd-9301ab78c18c" path="/api/getFlights" config-ref="HTTP_Request_configuration">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"from" : "attributes.queryparams.from",
+	"to" : "attributes.queryparams.to",
+	"depatureDate" : "attributes.queryparams.doj"
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="e835d97d-2861-45ac-827d-6ad4d9bae58a" message="Welcome"/>
+	</flow>
+</mule>
