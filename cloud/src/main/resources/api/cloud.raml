@@ -1,0 +1,21 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/cceb8fbf-e0af-4a79-ac46-5e9ad835c863/ # 
+title: CLOUD
+/getDetails:
+  get:
+    queryParameters:
+      id: number
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {
+                  "id" :"3", 
+                  "NAME" :"HAI", 
+                  "PHONE"  : 4455   
+
+
+              }
+        
+            
